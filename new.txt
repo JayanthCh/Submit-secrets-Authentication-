@@ -1,0 +1,52 @@
+register post routr till level 5a
+
+
+
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    const newUser = new User({
+      email:req.body.username,
+      password:hash
+    });
+    newUser.save(function(err){
+      if(err){
+        console.log("error");
+      }else{
+        res.render("secrets");
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+login post routr
+
+
+
+const username = req.body.username;
+const password = req.body.password;
+
+User.findOne({email:username},function(err,foundUser){
+  if(err){
+  console.log(err);
+  }
+  else{
+    if(foundUser){
+      bcrypt.compare(password, foundUser.password, function(err, result) {
+               if(result === true){
+                   res.render("secrets");
+               }
+          });
+
+
+
+    }
+
+  }
+});
