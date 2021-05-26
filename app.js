@@ -102,12 +102,16 @@ res.render("register");
 
 
 app.get("/secrets",function(req,res){
-  if(req.isAuthenticated()){
-    res.render("secrets");
-  }else{
-    res.redirect("/login");
-  }
-})
+  User.find({"secret": {$ne: null}}, function(err, foundUsers){
+    if (err){
+      console.log(err);
+    } else {
+      if (foundUsers) {
+        res.render("secrets", {usersWithSecrets: foundUsers});
+      }
+    }
+  });
+});
 
 app.get("/submit",function(req,res){
   if(req.isAuthenticated()){
@@ -115,15 +119,15 @@ app.get("/submit",function(req,res){
   }else{
     res.redirect("/login");
   }
-})
+});
 
 app.post("/submit", function(req, res){
   const submittedSecret = req.body.secret;
-
+console.log(submittedSecret);
 //Once the user is authenticated and their session gets saved, their user details are saved to req.user.
-  // console.log(req.user.id);
+  console.log(req.user._id);
 
-  User.findById(req.user.id, function(err, foundUser){
+  User.findById(req.user._id, function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
